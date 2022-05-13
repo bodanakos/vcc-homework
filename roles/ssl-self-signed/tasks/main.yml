@@ -1,0 +1,24 @@
+
+- name: "create ssl directories"
+  shell: "mkdir -p /etc/ssl/{{ http_host }}"
+- name: Generate an OpenSSL private key
+  openssl_privatekey:
+    path: "/etc/ssl/{{ http_host }}/{{ http_host }}.key"
+    size: "{{ key_size }}"
+    type: "{{ key_type }}"
+    backup: yes
+- name: Generate an OpenSSL Certificate Signing Request with Subject information
+  openssl_csr:
+    path: "/etc/ssl/{{ http_host  }}/{{ http_host }}.csr"
+    privatekey_path: "/etc/ssl/{{ http_host }}/{{ http_host }}.key"
+    country_name: "{{ country_name }}"
+    organization_name: "{{ organization_name }}"
+    email_address: "{{ email_address }}"
+    common_name: "{{ http_host }}"
+    
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "/etc/ssl/{{ http_host }}/{{ http_host }}.pem"
+    privatekey_path: "/etc/ssl/{{ http_host }}/{{ http_host }}.key"
+    csr_path: "/etc/ssl/{{ http_host }}/{{ http_host }}.csr"
+    provider: selfsigned

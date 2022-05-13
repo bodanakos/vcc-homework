@@ -1,0 +1,28 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    ServerName {{ http_host }}
+    ServerAlias www.{{ http_host }}
+    DocumentRoot /var/www/{{ http_host }}/wordpress
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    RewriteEngine On 
+    RewriteCond %{HTTPS}  !=on 
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L] 
+    
+    <FilesMatch \.php$>
+      # For Apache version 2.4.10 and above, use SetHandler to run PHP as a fastCGI process server
+      SetHandler "proxy:unix:/run/php/php{{ php_version }}-fpm-{{ pool.name }}.sock|fcgi://localhost"
+    </FilesMatch>
+
+
+    <Directory /var/www/{{ http_host }}>
+          Options -Indexes
+          AllowOverride All
+    </Directory>
+
+    <IfModule mod_dir.c>
+        DirectoryIndex index.php index.html index.cgi index.pl  index.xhtml index.htm
+    </IfModule>
+
+</VirtualHost>
