@@ -1,6 +1,9 @@
 
 - name: "create ssl directories"
-  shell: "mkdir -p /etc/ssl/{{ http_host }}"
+  file:
+    path: /etc/ssl/{{ http_host }}
+    state: directory
+
 - name: Generate an OpenSSL private key
   openssl_privatekey:
     path: "/etc/ssl/{{ http_host }}/{{ http_host }}.key"

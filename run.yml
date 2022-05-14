@@ -5,7 +5,7 @@
     - php-fpm
     - apache-install
     - apache-config
-    - sql-local
+#    - sql-new
     - wordpress
     - ssl-self-signed
   vars:
@@ -13,6 +13,7 @@
     - mysql_db: "wordpress"
     - mysql_user: "sammy"
     - mysql_password: "wppass"
+    - master_db: "10.0.0.201"
     - http_host: "akoshw.local"
     - http_conf: "akoshw.local.conf"
     - https_conf: "akoshw.local-ssl.conf"
@@ -30,13 +31,3 @@
         - {option: post_max_size, value: 100M}
         - {option: upload_max_filesize, value: 100M}
         - {section: opcache, option: opcache.enable, value: 1}
-  handlers:
-    - name: Reload Apache
-      service:
-        name: apache2
-        state: reloaded
-
-    - name: Restart Apache
-      service:
-        name: apache2
-        state: restarted

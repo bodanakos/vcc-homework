@@ -1,0 +1,22 @@
+- hosts: sql_nodes
+  become: yes
+
+  roles:
+    - sql-galera
+
+  vars:
+    - cluster_name: first_cluster
+    - cluster_hosts:
+       - node_name: node01
+         public_ip: 192.168.0.201
+         private_ip: 10.0.0.201
+       - node_name: node02
+         public_ip: 192.168.0.202
+         private_ip: 10.0.0.202
+    - private_ips:
+       - 10.0.0.201
+       - 10.0.0.202
+    - mysql_root_password: "asd123456"
+    - mysql_db: "wordpress"
+    - mysql_user: "sammy"
+    - mysql_password: "wppass"
