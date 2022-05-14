@@ -1,4 +1,0 @@
-- hosts: sql_nodes
-  tasks:
-    - debug:
-        var: hostvars[inventory_hostname]

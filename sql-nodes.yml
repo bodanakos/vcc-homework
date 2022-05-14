@@ -5,6 +5,7 @@
     - sql-galera
 
   vars:
+    - webserver_private_ip: 10.0.0.100
     - cluster_name: first_cluster
     - cluster_hosts:
        - node_name: node01

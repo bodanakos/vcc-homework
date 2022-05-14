@@ -1,5 +1,0 @@
-- name: Copy wsrep.cnf (default)
-  tags: [ mariadb-galera ]
-  template:
-    src="templates/wsrep/default.cnf.j2"
-    dest=/etc/mysql/mariadb.conf.d/galera.cnf

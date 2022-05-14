@@ -1,8 +1,0 @@
-[mysqld]
-
-# The first node bootstraps the cluster
-# and should not be given other nodes addresses
-wsrep_cluster_address = gcomm://
-
-wsrep_node_name = {{ cluster_hosts[0].node_name }}
-

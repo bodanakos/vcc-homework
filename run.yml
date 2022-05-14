@@ -5,10 +5,10 @@
     - php-fpm
     - apache-install
     - apache-config
-#    - sql-new
     - wordpress
     - ssl-self-signed
   vars:
+    - webserver_private_ip: 10.0.0.100
     - mysql_root_password: "asd123456"
     - mysql_db: "wordpress"
     - mysql_user: "sammy"

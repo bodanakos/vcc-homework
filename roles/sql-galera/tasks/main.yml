@@ -43,6 +43,7 @@
 - name: Create MySQL user for WordPress
   mysql_user:
     name: "{{ mysql_user }}"
+    host: "{{ webserver_private_ip }}"
     password: "{{ mysql_password }}"
     priv: "{{ mysql_db }}.*:ALL"
     state: present
@@ -53,7 +54,7 @@
 - name: Copy galera.cnf
   tags: [ mariadb-galera ]
   template:
-    src="templates/wsrep/default.cnf.j2"
+    src="templates/default.cnf.j2"
     dest=/etc/mysql/mariadb.conf.d/galera.cnf
 
 - name: stop MariaDB serivce
@@ -71,3 +72,4 @@
     name: mariadb
     state: started
   when: inventory_hostname != cluster_hosts[0].node_name
+
