@@ -16,7 +16,7 @@
 
 - name: Set up Apache HTTP VirtualHost
   template:
-    src: "files/default.conf.j2"
+    src: "templates/default.conf.j2"
     dest: "/etc/apache2/sites-available/{{ http_conf }}"
   vars:
     pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
@@ -28,7 +28,7 @@
 
 - name: Set up Apache HTTPS VirtualHost
   template:
-    src: "files/default-ssl.conf.j2"
+    src: "templates/default-ssl.conf.j2"
     dest: "/etc/apache2/sites-available/{{ https_conf }}"
   vars:
     pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
