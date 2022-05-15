@@ -15,5 +15,3 @@
     - haproxy
   vars:
     - http_host: "akoshw.local"
-    - http_conf: "akoshw.local.conf"
-    - https_conf: "akoshw.local-ssl.conf"
