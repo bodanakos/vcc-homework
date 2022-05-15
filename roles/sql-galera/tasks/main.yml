@@ -7,6 +7,10 @@
   loop: [ 'mariadb-server', 'python3-pymysql' ]
   tags: [ system ]
 
+- name: Copy the root credentials as .my.cnf file
+  template:
+    src=root.cnf.j2
+    dest=~/.my.cnf mode=0600
 
 - name: Set the root password
   mysql_user:
@@ -57,19 +61,29 @@
     src="templates/default.cnf.j2"
     dest=/etc/mysql/mariadb.conf.d/galera.cnf
 
+- name: Check if Galera Cluster has been installed
+  stat:
+    path: /etc/galera_has_been_installed
+  register: galera_has_been_installed
+
 - name: stop MariaDB serivce
   service:
     name: mariadb
     state: stopped
+  when: not galera_has_been_installed.stat.exists
 
 - name: Start new cluster on first node
   shell: /usr/bin/galera_new_cluster
-  when: ansible_ssh_host == cluster_hosts[0].public_ip
-
+  when: ansible_ssh_host == cluster_hosts[0].public_ip and not galera_has_been_installed.stat.exists
 
 - name: Start MariaDB on all node, except first
   service:
     name: mariadb
     state: started
-  when: ansible_ssh_host != cluster_hosts[0].public_ip
+  when: ansible_ssh_host != cluster_hosts[0].public_ip and not galera_has_been_installed.stat.exists
 
+- name: Confirm that Galera has been installed  (create file to /etc/galera_has_been_installed)
+  file:
+    path: /etc/galera_has_been_installed
+    state: touch
+  when: not galera_has_been_installed.stat.exists

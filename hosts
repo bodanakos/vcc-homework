@@ -4,3 +4,4 @@
 [sql_nodes]
 node01 ansible_host=192.168.0.201
 node02 ansible_host=192.168.0.202
+node03 ansible_host=192.168.0.203
