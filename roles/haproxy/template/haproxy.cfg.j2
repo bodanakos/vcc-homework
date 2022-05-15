@@ -21,7 +21,7 @@ defaults
 listen galera-cluster
         bind {{ haproxy_listen_ip }}:{{ haproxy_listen_port }}
         mode tcp
-        balance source
+        balance roundrobin
         option tcpka
         option mysql-check user {{ haproxy_db_user }}
 {% for node in cluster_hosts %}
