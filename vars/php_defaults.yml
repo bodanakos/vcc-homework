@@ -2,6 +2,12 @@
 - php_modules:
     - mysql
     - curl
+    - dom
+    - imagick
+    - mbstring
+    - gd
+    - zip
+    - intl
 - php_fpm_pools:
     - name: blog
       pm_max_children: 10
