@@ -1,70 +1,64 @@
+- name: Enable PHP-FPM configuration
+  shell: |
+   /usr/sbin/a2enconf php{{ php_version }}-fpm
+    /usr/sbin/a2enmod proxy
+    /usr/sbin/a2enmod proxy_fcgi
+  notify: Reload Apache    
 
-  - name: Enable PHP-FPM configuration
-    shell: |
-      /usr/sbin/a2enconf php{{ php_version }}-fpm
-      /usr/sbin/a2enmod proxy
-      /usr/sbin/a2enmod proxy_fcgi
-    notify: Reload Apache    
+- name: Create document root
+  file:
+    path: "/var/www/{{ http_host }}"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+    mode: '0755'
+  tags: [ apache ]
 
+- name: Set up Apache HTTP VirtualHost
+  template:
+    src: "files/default.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ http_conf }}"
+  vars:
+    pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
+  loop: "{{ php_fpm_pools }}"
+  loop_control:
+    loop_var: pool_
+  notify: Reload Apache
+  tags: [ apache ]
 
-  - name: Create document root
-    file:
-      path: "/var/www/{{ http_host }}"
-      state: directory
-      owner: "www-data"
-      group: "www-data"
-      mode: '0755'
-    tags: [ apache ]
+- name: Set up Apache HTTPS VirtualHost
+  template:
+    src: "files/default-ssl.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ https_conf }}"
+  vars:
+    pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
+  loop: "{{ php_fpm_pools }}"
+  loop_control:
+    loop_var: pool_
+  notify: Reload Apache
+  tags: [ apache ]
 
-  - name: Set up Apache HTTP VirtualHost
-    template:
-      src: "files/default.conf.j2"
-      dest: "/etc/apache2/sites-available/{{ http_conf }}"
-    vars:
-      pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
-    loop: "{{ php_fpm_pools }}"
-    loop_control:
-      loop_var: pool_
+- name: Enable rewrite module
+  shell: /usr/sbin/a2enmod rewrite
+  notify: Reload Apache
+  tags: [ apache ]
 
-    notify: Reload Apache
-    tags: [ apache ]
+- name: Enable ssl module
+  shell: /usr/sbin/a2enmod ssl
+  notify: Restart Apache
+  tags: [ apache ]
 
-  - name: Set up Apache HTTPS VirtualHost
-    template:
-      src: "files/default-ssl.conf.j2"
-      dest: "/etc/apache2/sites-available/{{ https_conf }}"
-    vars:
-      pool: "{{ php_fpm_pool_defaults | combine(pool_) }}"
-    loop: "{{ php_fpm_pools }}"
-    loop_control:
-      loop_var: pool_
+- name: Enable new site
+  shell: /usr/sbin/a2ensite {{ http_conf }}
+  notify: Reload Apache
+  tags: [ apache ]
 
-    notify: Reload Apache
-    tags: [ apache ]
+- name: Enable new site
+  shell: /usr/sbin/a2ensite {{ https_conf }}
+  notify: Reload Apache
+  tags: [ apache ]
 
-
-  - name: Enable rewrite module
-    shell: /usr/sbin/a2enmod rewrite
-    notify: Reload Apache
-    tags: [ apache ]
-
-  - name: Enable ssl module
-    shell: /usr/sbin/a2enmod ssl
-    notify: Restart Apache
-    tags: [ apache ]
-
-
-  - name: Enable new site
-    shell: /usr/sbin/a2ensite {{ http_conf }}
-    notify: Reload Apache
-    tags: [ apache ]
-
-  - name: Enable new site
-    shell: /usr/sbin/a2ensite {{ https_conf }}
-    notify: Reload Apache
-    tags: [ apache ]
-
-  - name: Disable default Apache site
-    shell: /usr/sbin/a2dissite 000-default.conf
-    notify: Restart Apache
-    tags: [ apache ]
+- name: Disable default Apache site
+  shell: /usr/sbin/a2dissite 000-default.conf
+  notify: Restart Apache
+  tags: [ apache ]
