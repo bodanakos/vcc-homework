@@ -1,31 +1,19 @@
 - hosts: websrv
   become: yes
 
+  vars_files:
+    - vars/php_defaults.yml
+    - vars/wordpress_defaults.yml
+    - vars/haproxy_defaults.yml
+    - vars/galera_cluster_hosts.yml
   roles:
     - php-fpm
     - apache-install
     - apache-config
     - wordpress
     - ssl-self-signed
+    - haproxy
   vars:
-    - mysql_db: "wordpress"
-    - mysql_user: "sammy"
-    - mysql_password: "wppass"
-    - master_db: "10.0.0.202"
     - http_host: "akoshw.local"
     - http_conf: "akoshw.local.conf"
     - https_conf: "akoshw.local-ssl.conf"
-    - php_version: "7.4"
-    - php_modules:
-        - mysql
-        - curl
-    - php_fpm_pools:
-        - name: blog
-          pm_max_children: 10
-          pm_start_servers: 4
-          pm_min_spare_servers: 2
-          pm_max_spare_servers: 6
-    - php_fpm_ini_options:
-        - {option: post_max_size, value: 100M}
-        - {option: upload_max_filesize, value: 100M}
-        - {section: opcache, option: opcache.enable, value: 1}

@@ -1,0 +1,13 @@
+- name: Install Haproxy Package(s)
+  apt: name={{ item }} update_cache=yes state=latest
+  loop: [ 'haproxy' ]
+  tags: [ system ]
+
+- name: Set up haproxy config
+  template:
+    src: "template/haproxy.cfg.j2"
+    dest: "/etc/haproxy/haproxy.cfg"
+
+- name: Set up haproxy logging
+  shell: echo -e 'local2.=info /var/log/haproxy-access.log \n local2.notice /var/log/haproxy-info.log' >> /etc/rsyslog.d/haproxy.conf
+  notify: Restart HaProxy

@@ -55,6 +55,14 @@
     login_password: "{{ mysql_root_password }}"
   tags: [ mysql ]
 
+- name: Create Haproxy user
+  mysql_user:
+    name: "{{ haproxy_db_user }}"
+    host: "{{ webserver_private_ip }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
 - name: Copy galera.cnf
   tags: [ mariadb-galera ]
   template:

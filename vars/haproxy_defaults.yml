@@ -1,0 +1,4 @@
+- haproxy_db_user: "haproxy"
+- haproxy_listen_name: "galera_cluster"
+- haproxy_listen_ip: "10.0.0.100"
+- haproxy_listen_port: "3030"

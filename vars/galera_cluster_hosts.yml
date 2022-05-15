@@ -1,0 +1,10 @@
+- cluster_hosts:
+   - node_name: node01
+     public_ip: 192.168.0.201
+     private_ip: 10.0.0.201
+   - node_name: node02
+     public_ip: 192.168.0.202
+     private_ip: 10.0.0.202
+   - node_name: node03
+     public_ip: 192.168.0.203
+     private_ip: 10.0.0.203

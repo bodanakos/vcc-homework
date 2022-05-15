@@ -29,7 +29,7 @@ define( 'DB_USER', '{{ mysql_user }}' );
 define( 'DB_PASSWORD', '{{ mysql_password }}' );
 
 /** MySQL hostname */
-define( 'DB_HOST', '{{ master_db }}' );
+define( 'DB_HOST', '{{ haproxy_listen_ip }}:{{ haproxy_listen_port }}' );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );

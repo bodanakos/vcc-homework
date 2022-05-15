@@ -1,0 +1,3 @@
+- mysql_db: "wordpress"
+- mysql_user: "sammy"
+- mysql_password: "wppass"

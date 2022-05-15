@@ -1,0 +1,38 @@
+global
+        log 127.0.0.1   local2
+        maxconn 1024
+        user haproxy
+        group haproxy
+        daemon
+	stats socket /var/run/haproxy.sock mode 600 level admin         # Make sock file for haproxy
+
+defaults
+        log     global
+        mode    http
+        option  tcplog
+        option  dontlognull
+        retries 3
+        option  redispatch
+        maxconn 1024
+        timeout connect 5000ms
+        timeout client 50000ms
+        timeout server 50000ms
+
+listen galera-cluster
+        bind {{ haproxy_listen_ip }}:{{ haproxy_listen_port }}
+        mode tcp
+        balance source
+        option tcpka
+        option mysql-check user {{ haproxy_db_user }}
+{% for node in cluster_hosts %}
+        server {{ node.node_name}} {{ node.private_ip }}:3306 check weight 1
+{% endfor %}
+
+frontend web 
+        bind *:9000
+        mode http
+        stats enable
+        stats uri /
+        stats realm HAProxy\ Statistics
+        stats auth admin:admin
+        stats admin if TRUE
