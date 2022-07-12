@@ -1,3 +1,8 @@
+- name: Add ppa:ondrej php repository if neccessary
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "22.04"
+
 - name: Install PHP-FPM
   apt:
     name:

@@ -6,6 +6,7 @@
     - vars/wordpress_defaults.yml
     - vars/haproxy_defaults.yml
     - vars/galera_cluster_hosts.yml
+
   roles:
     - php-fpm
     - apache-install
@@ -13,5 +14,7 @@
     - wordpress
     - ssl-self-signed
     - haproxy
+#    - breached-site
   vars:
     - http_host: "akoshw.local"
+    - ansible_ssh_user: akos
