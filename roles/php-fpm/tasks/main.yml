@@ -1,7 +1,7 @@
 - name: Add ppa:ondrej php repository if neccessary
   ansible.builtin.apt_repository:
     repo: ppa:ondrej/php
-  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "22.04"
+#  when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "22.04"
 
 - name: Install PHP-FPM
   apt:
@@ -43,7 +43,8 @@
     value: "{{ item.value }}"
     state: "{{ item.state | default('present') }}"
   with_items: "{{ php_fpm_ini_options }}"
-  notify: reload php-fpm
+#  notify: reload php-fpm
+  notify: restart php-fpm
   tags: php-fpm.options
 
 - name: Enable and start PHP-FPM service
